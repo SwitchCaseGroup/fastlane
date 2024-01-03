@@ -445,7 +445,7 @@ module Deliver
       end
     end
 
-    def retry_if_nil(message, tries: 5, wait_time: 10)
+    def retry_if_nil(message, tries: 25, wait_time: 10)
       loop do
         tries -= 1
 
