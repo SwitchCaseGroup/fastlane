@@ -32,6 +32,22 @@ module Supply
       release_names
     end
 
+    def track_releases
+      track = Supply.config[:track]
+
+      client.begin_edit(package_name: Supply.config[:package_name])
+      releases = client.track_releases(track) || []
+      client.abort_current_edit
+
+      if releases.empty?
+        UI.important("No releases found in track '#{track}'")
+      else
+        UI.success("Found '#{releases.length}' releases in track '#{track}'")
+      end
+
+      releases
+    end
+
     private
 
     def client

@@ -5525,6 +5525,55 @@ public func googlePlayTrackReleaseNames(packageName: String,
 }
 
 /**
+ Retrieves releases for a Google Play track
+
+ - parameters:
+   - packageName: The package name of the application to use
+   - track: The track of the application to use. The default available tracks are: production, beta, alpha, internal
+   - key: **DEPRECATED!** Use `--json_key` instead - The p12 File used to authenticate with Google
+   - issuer: **DEPRECATED!** Use `--json_key` instead - The issuer of the p12 file (email address of the service account)
+   - jsonKey: The path to a file containing service account JSON, used to authenticate with Google
+   - jsonKeyData: The raw service account JSON data used to authenticate with Google
+   - rootUrl: Root URL for the Google Play API. The provided URL will be used for API calls in place of https://www.googleapis.com/
+   - timeout: Timeout for read, open, and send (in seconds)
+
+ - returns: Array of objects representing the releases for the given Google Play track
+
+ More information: [https://docs.fastlane.tools/actions/supply/](https://docs.fastlane.tools/actions/supply/)
+ */
+public func googlePlayTrackReleases(packageName: String,
+                                    track: String = "production",
+                                    key: OptionalConfigValue<String?> = .fastlaneDefault(nil),
+                                    issuer: OptionalConfigValue<String?> = .fastlaneDefault(nil),
+                                    jsonKey: OptionalConfigValue<String?> = .fastlaneDefault(nil),
+                                    jsonKeyData: OptionalConfigValue<String?> = .fastlaneDefault(nil),
+                                    rootUrl: OptionalConfigValue<String?> = .fastlaneDefault(nil),
+                                    timeout: Int = 300)
+{
+    let packageNameArg = RubyCommand.Argument(name: "package_name", value: packageName, type: nil)
+    let trackArg = RubyCommand.Argument(name: "track", value: track, type: nil)
+    let keyArg = key.asRubyArgument(name: "key", type: nil)
+    let issuerArg = issuer.asRubyArgument(name: "issuer", type: nil)
+    let jsonKeyArg = jsonKey.asRubyArgument(name: "json_key", type: nil)
+    let jsonKeyDataArg = jsonKeyData.asRubyArgument(name: "json_key_data", type: nil)
+    let rootUrlArg = rootUrl.asRubyArgument(name: "root_url", type: nil)
+    let timeoutArg = RubyCommand.Argument(name: "timeout", value: timeout, type: nil)
+    let array: [RubyCommand.Argument?] = [packageNameArg,
+                                          trackArg,
+                                          keyArg,
+                                          issuerArg,
+                                          jsonKeyArg,
+                                          jsonKeyDataArg,
+                                          rootUrlArg,
+                                          timeoutArg]
+    let args: [RubyCommand.Argument] = array
+        .filter { $0?.value != nil }
+        .compactMap { $0 }
+    let command = RubyCommand(commandID: "", methodName: "google_play_track_releases", className: nil, args: args)
+    _ = runner.executeCommand(command)
+}
+
+/**
  Retrieves version codes for a Google Play track
 
  - parameters:
